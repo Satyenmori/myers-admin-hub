@@ -1,249 +1,92 @@
-
 import React from "react";
-import { useAuth } from "@/context/AuthContext";
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { LOCAL_STORAGE_KEYS } from "@/lib/constants";
-import { Dispensary, User } from "@/lib/types";
-import { 
-  Building, 
-  CheckCircle2, 
-  Clock, 
-  CreditCard, 
-  Line, 
-  ListTodo, 
-  TrendingUp, 
-  Users 
-} from "lucide-react";
-import { 
-  Area, 
-  AreaChart, 
-  Bar, 
-  BarChart, 
-  CartesianGrid, 
-  Legend, 
-  Line as RechartsLine, 
-  LineChart, 
-  ResponsiveContainer, 
-  Tooltip, 
-  XAxis, 
-  YAxis 
-} from "recharts";
-
-const StatCard: React.FC<{
-  title: string;
-  value: string | number;
-  icon: React.ReactNode;
-  change?: string;
-  positive?: boolean;
-}> = ({ title, value, icon, change, positive }) => {
-  return (
-    <div className="glass-card p-5 rounded-xl">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
-          <p className="text-2xl font-semibold mt-1">{value}</p>
-        </div>
-        <div className="p-2 rounded-lg bg-primary/10 text-primary">
-          {icon}
-        </div>
-      </div>
-      {change && (
-        <div className="flex items-center text-xs">
-          <span className={positive ? "text-green-500" : "text-red-500"}>
-            {positive ? "+" : ""}{change}
-          </span>
-          <span className="text-muted-foreground ml-1">vs last month</span>
-        </div>
-      )}
-    </div>
-  );
-};
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line as RechartsLine } from "recharts";
+import { Users, Building, ClipboardList, CheckCircle } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
-  const [users] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, []);
-  const [dispensaries] = useLocalStorage<Dispensary[]>(LOCAL_STORAGE_KEYS.DISPENSARIES, []);
+  const { mode } = useTheme();
 
-  // Calculate stats
-  const totalUsers = users.length;
-  const activeUsers = users.filter(u => u.status === "active").length;
-  
-  const allServiceRequests = dispensaries.flatMap(d => d.serviceRequests);
-  const pendingRequests = allServiceRequests.filter(sr => sr.status === "pending").length;
-  const resolvedRequests = allServiceRequests.filter(sr => sr.status === "resolved").length;
-
-  // Generate chart data
-  const last7Days = Array.from({ length: 7 }, (_, i) => {
-    const date = new Date();
-    date.setDate(date.getDate() - (6 - i));
-    return date.toISOString().substring(0, 10);
-  });
-
-  const requestsChartData = last7Days.map(date => {
-    const reqCount = allServiceRequests.filter(
-      req => req.createdAt.substring(0, 10) === date
-    ).length;
-    
-    return {
-      date: date.substring(5),
-      requests: reqCount
-    };
-  });
-
-  const requestsByStatusData = [
-    { name: "Pending", value: pendingRequests },
-    { name: "In Progress", value: allServiceRequests.filter(sr => sr.status === "in-progress").length },
-    { name: "Resolved", value: resolvedRequests }
+  const data = [
+    { name: 'Jan', users: 40, dispensaries: 24, requests: 30 },
+    { name: 'Feb', users: 30, dispensaries: 13, requests: 22 },
+    { name: 'Mar', users: 20, dispensaries: 98, requests: 25 },
+    { name: 'Apr', users: 27, dispensaries: 39, requests: 20 },
+    { name: 'May', users: 18, dispensaries: 48, requests: 27 },
+    { name: 'Jun', users: 23, dispensaries: 38, requests: 35 },
+    { name: 'Jul', users: 40, dispensaries: 24, requests: 30 },
+    { name: 'Aug', users: 30, dispensaries: 13, requests: 22 },
+    { name: 'Sep', users: 20, dispensaries: 98, requests: 25 },
+    { name: 'Oct', users: 27, dispensaries: 39, requests: 20 },
+    { name: 'Nov', users: 18, dispensaries: 48, requests: 27 },
+    { name: 'Dec', users: 23, dispensaries: 38, requests: 35 },
   ];
 
-  const dispensaryStatusData = [
-    { name: "Open", value: dispensaries.filter(d => d.status === "open").length },
-    { name: "Under Maintenance", value: dispensaries.filter(d => d.status === "under-maintenance").length },
-    { name: "Closed", value: dispensaries.filter(d => d.status === "closed").length }
+  const cardData = [
+    { title: "Total Users", value: 120, icon: Users },
+    { title: "Active Dispensaries", value: 35, icon: Building },
+    { title: "Open Requests", value: 50, icon: ClipboardList },
+    { title: "Resolved Requests", value: 80, icon: CheckCircle },
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
-            Welcome back, {user?.name}
-          </p>
-        </div>
-        <div className="flex items-center">
-          <span className="text-sm text-muted-foreground mr-2">
-            {new Date().toLocaleDateString(undefined, { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            })}
-          </span>
-        </div>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Dashboard Overview</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        {cardData.map((card, index) => (
+          <Card key={index}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+              {React.createElement(card.icon, { className: "h-4 w-4 text-gray-500 dark:text-gray-400" })}
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{card.value}</div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
-        <StatCard
-          title="Total Users"
-          value={totalUsers}
-          icon={<Users className="h-6 w-6" />}
-          change="12%"
-          positive={true}
-        />
-        <StatCard
-          title="Active Users"
-          value={activeUsers}
-          icon={<CheckCircle2 className="h-6 w-6" />}
-          change="8%"
-          positive={true}
-        />
-        <StatCard
-          title="Pending Requests"
-          value={pendingRequests}
-          icon={<Clock className="h-6 w-6" />}
-          change="5%"
-          positive={false}
-        />
-        <StatCard
-          title="Resolved Requests"
-          value={resolvedRequests}
-          icon={<ListTodo className="h-6 w-6" />}
-          change="18%"
-          positive={true}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="glass-card p-5 rounded-xl">
-          <h3 className="text-lg font-medium mb-4">Service Requests (Last 7 days)</h3>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={requestsChartData}
-                margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
-              >
-                <defs>
-                  <linearGradient id="colorRequests" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#007bff" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#007bff" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                <XAxis 
-                  dataKey="date" 
-                  stroke="#777" 
-                  tick={{ fill: '#777', fontSize: 12 }}
-                />
-                <YAxis 
-                  stroke="#777" 
-                  tick={{ fill: '#777', fontSize: 12 }}
-                />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card className="col-span-1 lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Monthly Activity</CardTitle>
+            <CardDescription>Overview of users, dispensaries, and service requests.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
                 <Tooltip />
-                <Area
-                  type="monotone"
-                  dataKey="requests"
-                  stroke="#007bff"
-                  fillOpacity={1}
-                  fill="url(#colorRequests)"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="glass-card p-5 rounded-xl">
-          <h3 className="text-lg font-medium mb-4">Service Requests by Status</h3>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={requestsByStatusData}
-                margin={{ top: 10, right: 30, left: 0, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                <XAxis 
-                  dataKey="name" 
-                  stroke="#777" 
-                  tick={{ fill: '#777', fontSize: 12 }}
-                />
-                <YAxis 
-                  stroke="#777" 
-                  tick={{ fill: '#777', fontSize: 12 }}
-                />
-                <Tooltip />
-                <Bar dataKey="value" fill="#28a745" radius={[4, 4, 0, 0]} />
+                <Legend />
+                <Bar dataKey="users" barSize={20} fill="#8884d8" />
+                <Bar dataKey="dispensaries" barSize={20} fill="#82ca9d" />
+                <Bar dataKey="requests" barSize={20} fill="#ffc658" />
               </BarChart>
             </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+          </CardContent>
+        </Card>
 
-      <div className="glass-card p-5 rounded-xl">
-        <h3 className="text-lg font-medium mb-4">Dispensary Status Overview</h3>
-        <div className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={dispensaryStatusData}
-              layout="vertical"
-              margin={{ top: 10, right: 30, left: 50, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-              <XAxis 
-                type="number" 
-                stroke="#777" 
-                tick={{ fill: '#777', fontSize: 12 }}
-              />
-              <YAxis 
-                type="category" 
-                dataKey="name" 
-                stroke="#777" 
-                tick={{ fill: '#777', fontSize: 12 }}
-              />
-              <Tooltip />
-              <Bar dataKey="value" fill="#007bff" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>User Growth</CardTitle>
+            <CardDescription>Monthly trend of new user registrations.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <RechartsLine type="monotone" dataKey="users" stroke="#8884d8" activeDot={{ r: 8 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
