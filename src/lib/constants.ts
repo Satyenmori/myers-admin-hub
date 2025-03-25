@@ -21,6 +21,12 @@ export const MENU_ITEMS: MenuItem[] = [
     allowedRoles: ["admin", "manager", "user"],
   },
   {
+    title: "Service Requests",
+    path: "/service-requests",
+    icon: "clipboard-list",
+    allowedRoles: ["admin", "manager", "user"],
+  },
+  {
     title: "Settings",
     path: "/settings",
     icon: "settings",

@@ -29,6 +29,17 @@ export interface ServiceRequest {
   status: 'pending' | 'in-progress' | 'resolved';
   createdAt: string;
   resolvedAt?: string;
+  priority?: 'low' | 'medium' | 'high';
+  dispensaryId: string;
+  responseNotes?: string[];
+}
+
+export interface ServiceResponse {
+  id: string;
+  requestId: string;
+  note: string;
+  createdAt: string;
+  createdBy: string;
 }
 
 export interface AuthState {
