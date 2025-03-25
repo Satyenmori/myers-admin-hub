@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -33,7 +34,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { LOCAL_STORAGE_KEYS } from "@/lib/constants";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Dispensaries: React.FC = () => {
@@ -49,12 +49,6 @@ const Dispensaries: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [selectedDispensary, setSelectedDispensary] = useState<Dispensary | null>(null);
   const [serviceRequests, setServiceRequests] = useState<ServiceRequest[]>([]);
-
-  useEffect(() => {
-    if (selectedDispensary) {
-      setServiceRequests(selectedDispensary.serviceRequests);
-    }
-  }, [selectedDispensary]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setNewDispensary({ ...newDispensary, [e.target.name]: e.target.value });
@@ -94,7 +88,7 @@ const Dispensaries: React.FC = () => {
       description: "New service request description",
       status: "pending" as const,
       createdAt: new Date().toISOString(),
-      dispensaryId: dispensary.id,  // Add the dispensaryId
+      dispensaryId: dispensary.id,
       priority: "medium" as const,
     };
 
@@ -145,7 +139,7 @@ const Dispensaries: React.FC = () => {
         <h1 className="text-2xl font-bold">Dispensaries</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="primary">Add Dispensary</Button>
+            <Button>Add Dispensary</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -221,30 +215,40 @@ const Dispensaries: React.FC = () => {
           </DialogContent>
         </Dialog>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {dispensaries.map((dispensary) => (
-          <Card key={dispensary.id} className="bg-card text-card-foreground shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold">{dispensary.name}</CardTitle>
-              <CardDescription>{dispensary.address}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Category: {dispensary.category}</p>
-              <p>Status: {dispensary.status}</p>
-              <Button variant="outline" size="sm" onClick={() => {
-                setSelectedDispensary(dispensary);
-                setServiceRequests(dispensary.serviceRequests);
-              }}>
-                View Service Requests
-              </Button>
-              <Button variant="secondary" size="sm" onClick={() => handleAddServiceRequest(dispensary)}>
-                Add Service Request
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      
+      <Table>
+        <TableCaption>List of dispensaries</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Address</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {dispensaries.map((dispensary) => (
+            <TableRow key={dispensary.id}>
+              <TableCell className="font-medium">{dispensary.name}</TableCell>
+              <TableCell>{dispensary.address}</TableCell>
+              <TableCell>{dispensary.category}</TableCell>
+              <TableCell>{dispensary.status}</TableCell>
+              <TableCell className="flex space-x-2">
+                <Button variant="outline" size="sm" onClick={() => {
+                  setSelectedDispensary(dispensary);
+                  setServiceRequests(dispensary.serviceRequests);
+                }}>
+                  View Service Requests
+                </Button>
+                <Button variant="secondary" size="sm" onClick={() => handleAddServiceRequest(dispensary)}>
+                  Add Service Request
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       {selectedDispensary && (
         <Dialog open={!!selectedDispensary} onOpenChange={() => setSelectedDispensary(null)}>

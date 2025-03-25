@@ -29,6 +29,105 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+// Static service requests data
+const staticServiceRequests = [
+  {
+    id: "sr-001",
+    title: "Software Update Needed",
+    description: "The POS system needs an urgent software update to version 2.5",
+    status: "pending" as const,
+    createdAt: "2023-06-15T10:30:00Z",
+    dispensaryId: "disp-001",
+    dispensaryName: "Green Leaf Dispensary",
+    priority: "high" as const,
+    responseNotes: [
+      {
+        id: "note-001",
+        text: "We've scheduled the update for tomorrow morning",
+        createdAt: "2023-06-15T14:20:00Z",
+        createdBy: "user-002"
+      }
+    ]
+  },
+  {
+    id: "sr-002",
+    title: "Security System Malfunction",
+    description: "The security cameras in the back room have stopped working",
+    status: "in-progress" as const,
+    createdAt: "2023-06-10T08:45:00Z",
+    dispensaryId: "disp-002",
+    dispensaryName: "MediCanna",
+    priority: "high" as const,
+    responseNotes: [
+      {
+        id: "note-002",
+        text: "Technician has been dispatched",
+        createdAt: "2023-06-10T09:30:00Z",
+        createdBy: "user-001"
+      },
+      {
+        id: "note-003",
+        text: "Issue identified, waiting for replacement parts",
+        createdAt: "2023-06-11T15:20:00Z",
+        createdBy: "user-003"
+      }
+    ]
+  },
+  {
+    id: "sr-003",
+    title: "Internet Connection Issues",
+    description: "Experiencing slow internet connection affecting sales transactions",
+    status: "resolved" as const,
+    createdAt: "2023-06-05T16:10:00Z",
+    resolvedAt: "2023-06-07T11:25:00Z",
+    dispensaryId: "disp-003",
+    dispensaryName: "Herbal Solutions",
+    priority: "medium" as const,
+    responseNotes: [
+      {
+        id: "note-004",
+        text: "Router has been reset",
+        createdAt: "2023-06-05T17:00:00Z",
+        createdBy: "user-002"
+      },
+      {
+        id: "note-005",
+        text: "ISP confirmed service disruption, now resolved",
+        createdAt: "2023-06-07T10:15:00Z",
+        createdBy: "user-001"
+      }
+    ]
+  },
+  {
+    id: "sr-004",
+    title: "POS System Crash",
+    description: "System crashes when processing large orders",
+    status: "pending" as const,
+    createdAt: "2023-06-14T09:20:00Z",
+    dispensaryId: "disp-004",
+    dispensaryName: "Nature's Remedy",
+    priority: "high" as const
+  },
+  {
+    id: "sr-005",
+    title: "Printer Not Working",
+    description: "Receipt printer is not connecting to the system",
+    status: "in-progress" as const,
+    createdAt: "2023-06-13T13:40:00Z",
+    dispensaryId: "disp-001",
+    dispensaryName: "Green Leaf Dispensary",
+    priority: "low" as const,
+    responseNotes: [
+      {
+        id: "note-006",
+        text: "Checking printer drivers",
+        createdAt: "2023-06-13T14:10:00Z",
+        createdBy: "user-003"
+      }
+    ]
+  }
+];
+
 const ServiceRequests = () => {
   const { user: currentUser } = useAuth();
   const [dispensaries] = useLocalStorage<Dispensary[]>(
@@ -36,6 +135,7 @@ const ServiceRequests = () => {
     []
   );
   const [users] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, []);
+  const [serviceRequestsData, setServiceRequestsData] = useState(staticServiceRequests);
 
   // Pagination and filtering
   const [search, setSearch] = useState("");
@@ -49,17 +149,8 @@ const ServiceRequests = () => {
   const [respondingToRequest, setRespondingToRequest] = useState<ServiceRequest | null>(null);
   const [responseNote, setResponseNote] = useState("");
 
-  // Extract all service requests from dispensaries
-  const allServiceRequests = dispensaries.flatMap(dispensary => 
-    dispensary.serviceRequests.map(request => ({
-      ...request,
-      dispensaryId: dispensary.id,
-      dispensaryName: dispensary.name
-    }))
-  );
-
   // Filtering logic
-  const filteredRequests = allServiceRequests.filter((request) => {
+  const filteredRequests = serviceRequestsData.filter((request) => {
     const matchesSearch = request.title.toLowerCase().includes(search.toLowerCase()) || 
                           request.description.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter ? request.status === statusFilter : true;
@@ -96,39 +187,26 @@ const ServiceRequests = () => {
   const handleRespondToRequest = () => {
     if (!respondingToRequest || !responseNote.trim() || !currentUser) return;
 
-    const updatedDispensaries = dispensaries.map(dispensary => {
-      if (dispensary.id === respondingToRequest.dispensaryId) {
-        const updatedRequests = dispensary.serviceRequests.map(request => {
-          if (request.id === respondingToRequest.id) {
-            return {
-              ...request,
-              responseNotes: [
-                ...(request.responseNotes || []),
-                {
-                  id: Date.now().toString(),
-                  text: responseNote,
-                  createdAt: new Date().toISOString(),
-                  createdBy: currentUser.id
-                }
-              ],
-              status: request.status === 'pending' ? 'in-progress' : request.status
-            };
-          }
-          return request;
-        });
-        
-        return { ...dispensary, serviceRequests: updatedRequests };
+    const updatedServiceRequests = serviceRequestsData.map(request => {
+      if (request.id === respondingToRequest.id) {
+        return {
+          ...request,
+          responseNotes: [
+            ...(request.responseNotes || []),
+            {
+              id: Date.now().toString(),
+              text: responseNote,
+              createdAt: new Date().toISOString(),
+              createdBy: currentUser.id
+            }
+          ],
+          status: request.status === 'pending' ? 'in-progress' : request.status
+        };
       }
-      return dispensary;
+      return request;
     });
 
-    // Update local storage - since we're only reading from dispensaries, 
-    // we don't need to update the state, just localStorage
-    localStorage.setItem(
-      LOCAL_STORAGE_KEYS.DISPENSARIES,
-      JSON.stringify(updatedDispensaries)
-    );
-
+    setServiceRequestsData(updatedServiceRequests);
     setResponseNote("");
     setRespondingToRequest(null);
     
@@ -136,41 +214,24 @@ const ServiceRequests = () => {
       title: "Response Added",
       description: "Your response has been added to the service request",
     });
-
-    // Force a refresh of the data
-    window.location.reload();
   };
 
-  const handleUpdateRequestStatus = (requestId: string, dispensaryId: string, newStatus: "pending" | "in-progress" | "resolved") => {
-    const updatedDispensaries = dispensaries.map(dispensary => {
-      if (dispensary.id === dispensaryId) {
-        const updatedRequests = dispensary.serviceRequests.map(request => {
-          if (request.id === requestId) {
-            return {
-              ...request,
-              status: newStatus,
-              ...(newStatus === "resolved" ? { resolvedAt: new Date().toISOString() } : {})
-            };
-          }
-          return request;
-        });
-        
-        return { ...dispensary, serviceRequests: updatedRequests };
+  const handleUpdateRequestStatus = (requestId: string, newStatus: "pending" | "in-progress" | "resolved") => {
+    const updatedServiceRequests = serviceRequestsData.map(request => {
+      if (request.id === requestId) {
+        return {
+          ...request,
+          status: newStatus,
+          ...(newStatus === "resolved" ? { resolvedAt: new Date().toISOString() } : {})
+        };
       }
-      return dispensary;
+      return request;
     });
 
-    // Update local storage
-    localStorage.setItem(
-      LOCAL_STORAGE_KEYS.DISPENSARIES,
-      JSON.stringify(updatedDispensaries)
-    );
+    setServiceRequestsData(updatedServiceRequests);
 
     if (viewingRequest && viewingRequest.id === requestId) {
-      const updatedRequest = updatedDispensaries
-        .find(d => d.id === dispensaryId)
-        ?.serviceRequests.find(r => r.id === requestId);
-        
+      const updatedRequest = updatedServiceRequests.find(r => r.id === requestId);
       if (updatedRequest) {
         setViewingRequest(updatedRequest);
       }
@@ -180,9 +241,6 @@ const ServiceRequests = () => {
       title: "Status Updated",
       description: `Service request status updated to ${newStatus.replace('-', ' ')}`,
     });
-
-    // Force a refresh of the data
-    window.location.reload();
   };
 
   const formatDateTime = (dateString: string) => {
@@ -459,7 +517,7 @@ const ServiceRequests = () => {
                 
                 <div className="mt-4">
                   <h4 className="text-sm font-medium text-muted-foreground mb-2">Dispensary</h4>
-                  <p>{getDispensaryById(viewingRequest.dispensaryId)?.name}</p>
+                  <p>{viewingRequest.dispensaryName}</p>
                 </div>
                 
                 <div className="mt-4">
@@ -492,14 +550,14 @@ const ServiceRequests = () => {
                   <div className="mt-6 flex flex-wrap gap-2">
                     {viewingRequest.status === "pending" && (
                       <button
-                        onClick={() => handleUpdateRequestStatus(viewingRequest.id, viewingRequest.dispensaryId, "in-progress")}
+                        onClick={() => handleUpdateRequestStatus(viewingRequest.id, "in-progress")}
                         className="btn-secondary py-2 px-4 text-sm"
                       >
                         Mark as In Progress
                       </button>
                     )}
                     <button
-                      onClick={() => handleUpdateRequestStatus(viewingRequest.id, viewingRequest.dispensaryId, "resolved")}
+                      onClick={() => handleUpdateRequestStatus(viewingRequest.id, "resolved")}
                       className="btn-primary py-2 px-4 text-sm"
                     >
                       Mark as Resolved
@@ -547,7 +605,7 @@ const ServiceRequests = () => {
               <div>
                 <div className="font-medium">{respondingToRequest.title}</div>
                 <div className="text-sm text-muted-foreground mb-4">
-                  {getDispensaryById(respondingToRequest.dispensaryId)?.name}
+                  {respondingToRequest.dispensaryName}
                 </div>
               </div>
               <div>
