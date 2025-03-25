@@ -1,8 +1,11 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
 
-const NotFound = () => {
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CircleUserRound, Lock } from "lucide-react";
+
+const NotFound: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.error(
@@ -12,13 +15,25 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="text-center p-8 max-w-md animate-fade-in">
+        <div className="flex items-center justify-center mb-6 relative">
+          <CircleUserRound className="w-16 h-16 text-myers-yellow opacity-50" />
+          <Lock className="absolute w-8 h-8 text-myers-blue opacity-50" />
+        </div>
+        
+        <h1 className="text-6xl font-bold font-poppins mb-2">404</h1>
+        <p className="text-2xl font-medium mb-4">Page Not Found</p>
+        <p className="text-muted-foreground mb-8">
+          The page you are looking for doesn't exist or has been moved.
+        </p>
+        
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="btn-primary"
+        >
+          Return to Dashboard
+        </button>
       </div>
     </div>
   );
