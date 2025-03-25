@@ -1,42 +1,54 @@
-
+import {
+  BarChart3,
+  Building2,
+  CircleUserRound,
+  HelpCircle,
+  Home,
+  Lock,
+  Settings,
+  Users,
+} from "lucide-react";
 import { MenuItem } from "./types";
 
 export const MENU_ITEMS: MenuItem[] = [
   {
     title: "Dashboard",
     path: "/dashboard",
-    icon: "layout-dashboard",
+    icon: "Home",
     allowedRoles: ["admin", "manager", "user"],
   },
   {
     title: "Users",
     path: "/users",
-    icon: "users",
+    icon: "Users",
     allowedRoles: ["admin", "manager"],
   },
   {
     title: "Dispensaries",
     path: "/dispensaries",
-    icon: "building-store",
-    allowedRoles: ["admin", "manager", "user"],
+    icon: "Building2",
+    allowedRoles: ["admin", "manager"],
   },
   {
     title: "Service Requests",
     path: "/service-requests",
-    icon: "clipboard-list",
-    allowedRoles: ["admin", "manager", "user"],
+    icon: "BarChart3",
+    allowedRoles: ["admin", "manager"],
   },
-  {
-    title: "Settings",
-    path: "/settings",
-    icon: "settings",
-    allowedRoles: ["admin"],
-  },
+  // {
+  //   title: "Settings",
+  //   path: "/settings",
+  //   icon: "Settings",
+  //   allowedRoles: ["admin"],
+  // },
 ];
 
 export const LOCAL_STORAGE_KEYS = {
-  AUTH: "myers-admin-auth",
-  USERS: "myers-admin-users",
-  DISPENSARIES: "myers-admin-dispensaries",
-  THEME: "myers-admin-theme",
+  USERS: 'myersAdmin_users',
+  DISPENSARIES: 'myersAdmin_dispensaries',
+  SERVICE_REQUESTS: 'myersAdmin_serviceRequests',
+  AUTH: 'myersAdmin_auth',
+  INVOICES: 'myersAdmin_invoices',
+  PAYMENTS: 'myersAdmin_payments', 
+  SERVICE_AGREEMENTS: 'myersAdmin_serviceAgreements'
 };
