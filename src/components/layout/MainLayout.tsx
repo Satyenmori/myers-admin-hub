@@ -4,6 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import BreadcrumbNav from "./Breadcrumb";
 
 const MainLayout: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -41,6 +42,7 @@ const MainLayout: React.FC = () => {
             ></div>
           )}
           
+          <BreadcrumbNav />
           <Outlet />
         </main>
       </div>

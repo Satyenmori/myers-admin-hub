@@ -1,54 +1,60 @@
-import {
-  BarChart3,
-  Building2,
-  CircleUserRound,
-  HelpCircle,
-  Home,
-  Lock,
-  Settings,
-  Users,
-} from "lucide-react";
-import { MenuItem } from "./types";
-
-export const MENU_ITEMS: MenuItem[] = [
+export const MENU_ITEMS = [
   {
     title: "Dashboard",
     path: "/dashboard",
-    icon: "Home",
+    icon: "LayoutDashboard",
     allowedRoles: ["admin", "manager", "user"],
   },
   {
     title: "Users",
-    path: "/users",
+    path: "#",
     icon: "Users",
     allowedRoles: ["admin", "manager"],
+    submenu: [
+      {
+        title: "Manage Admin Users",
+        path: "/users",
+        icon: "ShieldCheck",
+        allowedRoles: ["admin", "manager"],
+      },
+      {
+        title: "Manage Support Engineers",
+        path: "/manage-support-engineers",
+        icon: "Wrench",
+        allowedRoles: ["admin", "manager"],
+      }
+    ]
   },
   {
     title: "Dispensaries",
     path: "/dispensaries",
-    icon: "Building2",
-    allowedRoles: ["admin", "manager"],
+    icon: "Store",
+    allowedRoles: ["admin", "manager", "user"],
   },
   {
     title: "Service Requests",
     path: "/service-requests",
-    icon: "BarChart3",
-    allowedRoles: ["admin", "manager"],
+    icon: "TicketCheck",
+    allowedRoles: ["admin", "manager", "user"],
   },
-  // {
-  //   title: "Settings",
-  //   path: "/settings",
-  //   icon: "Settings",
-  //   allowedRoles: ["admin"],
-  // },
+  {
+    title: "Settings",
+    path: "/settings",
+    icon: "Settings",
+    allowedRoles: ["admin"],
+  },
 ];
 
+export const ROLES = ["admin", "manager", "user"] as const;
+export const STATUSES = ["active", "inactive"] as const;
+
 export const LOCAL_STORAGE_KEYS = {
-  USERS: 'myersAdmin_users',
-  DISPENSARIES: 'myersAdmin_dispensaries',
-  SERVICE_REQUESTS: 'myersAdmin_serviceRequests',
-  AUTH: 'myersAdmin_auth',
-  INVOICES: 'myersAdmin_invoices',
-  PAYMENTS: 'myersAdmin_payments', 
-  SERVICE_AGREEMENTS: 'myersAdmin_serviceAgreements'
+  USERS: "myers-security:users",
+  DISPENSARIES: "myers-security:dispensaries",
+  SERVICE_REQUESTS: "myers-security:service-requests",
+  AUTH: "myers-security:auth",
+  INVOICES: "myers-security:invoices",
+  PAYMENTS: "myers-security:payments",
+  SERVICE_AGREEMENTS: "myers-security:service-agreements",
+  THEME: "myers-security:theme",
 };

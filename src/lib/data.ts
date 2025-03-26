@@ -1,103 +1,225 @@
+import { Dispensary, Invoice, Payment, Role, ServiceAgreement, ServiceRequest, User } from "./types";
 
-import { Dispensary, ServiceRequest, User } from "./types";
-import { v4 as uuidv4 } from "uuid";
+export const USERS_DATA: User[] = [
+  {
+    id: "user-001",
+    name: "Admin User",
+    email: "admin@example.com",
+    role: "admin",
+    status: "active",
+    createdAt: "2023-01-01T00:00:00Z",
+  },
+  {
+    id: "user-002",
+    name: "Manager User",
+    email: "manager@example.com",
+    role: "manager",
+    status: "active",
+    createdAt: "2023-01-01T00:00:00Z",
+  },
+  {
+    id: "user-003",
+    name: "Regular User",
+    email: "user@example.com",
+    role: "user",
+    status: "inactive",
+    createdAt: "2023-01-01T00:00:00Z",
+  },
+];
 
-export const generateInitialUsers = (): User[] => {
-  return [
-    {
-      id: uuidv4(),
-      name: "Admin User",
-      email: "admin@myerssecurity.com",
-      role: "admin",
-      status: "active",
-      avatar: "/avatars/admin.jpg",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: uuidv4(),
-      name: "Manager User",
-      email: "manager@myerssecurity.com",
-      role: "manager",
-      status: "active",
-      avatar: "/avatars/manager.jpg",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: uuidv4(),
-      name: "Regular User",
-      email: "user@myerssecurity.com",
-      role: "user",
-      status: "active",
-      avatar: "/avatars/user.jpg",
-      createdAt: new Date().toISOString(),
-    },
-    ...Array.from({ length: 10 }, (_, i) => ({
-      id: uuidv4(),
-      name: `Test User ${i + 1}`,
-      email: `testuser${i + 1}@myerssecurity.com`,
-      role: (i % 3 === 0 ? "admin" : i % 3 === 1 ? "manager" : "user") as "admin" | "manager" | "user",
-      status: i % 4 === 0 ? "inactive" : "active" as "active" | "inactive",
-      createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-    })),
-  ];
-};
+export const DISPENSARIES_DATA: Dispensary[] = [
+  {
+    id: "disp-001",
+    name: "Green Leaf Dispensary",
+    address: "123 Main St, Anytown",
+    phone: "555-1234",
+    email: "info@greenleaf.com",
+    status: "active",
+    createdAt: "2023-02-15T00:00:00Z",
+  },
+  {
+    id: "disp-002",
+    name: "Herbal Wellness",
+    address: "456 Elm St, Anytown",
+    phone: "555-5678",
+    email: "contact@herbalwellness.com",
+    status: "inactive",
+    createdAt: "2023-03-01T00:00:00Z",
+  },
+  {
+    id: "disp-003",
+    name: "MediGreen",
+    address: "789 Oak St, Anytown",
+    phone: "555-9012",
+    email: "hello@medigreen.com",
+    status: "active",
+    createdAt: "2023-03-15T00:00:00Z",
+  },
+];
 
-export const generateServiceRequests = (): ServiceRequest[] => {
-  return Array.from({ length: 5 }, (_, i) => ({
-    id: uuidv4(),
-    title: `Service Request ${i + 1}`,
-    description: `Description for service request ${i + 1}`,
-    status: (i % 3 === 0 ? "pending" : i % 3 === 1 ? "in-progress" : "resolved") as "pending" | "in-progress" | "resolved",
-    createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-    resolvedAt: i % 3 === 2 ? new Date(Date.now() - i * 12 * 60 * 60 * 1000).toISOString() : undefined,
-  }));
-};
+export const SERVICE_REQUESTS_DATA: ServiceRequest[] = [
+  {
+    id: "sr-001",
+    title: "Security System Malfunction",
+    description: "Main entrance security camera is not recording properly.",
+    status: "pending",
+    createdAt: "2023-04-15T08:30:00Z",
+    dispensaryId: "disp-001",
+    dispensaryName: "Green Leaf Dispensary",
+    priority: "high",
+    responseNotes: []
+  },
+  {
+    id: "sr-002",
+    title: "Alarm System False Triggers",
+    description: "The alarm system has been triggering without apparent reason during closing hours.",
+    status: "in-progress",
+    createdAt: "2023-04-10T14:15:00Z",
+    dispensaryId: "disp-002",
+    dispensaryName: "Herbal Wellness",
+    priority: "medium",
+    responseNotes: [
+      {
+        id: "note-001",
+        text: "Initial investigation shows sensor malfunction. Replacement ordered.",
+        createdAt: "2023-04-11T09:22:00Z",
+        createdBy: "John Technician"
+      }
+    ]
+  },
+  {
+    id: "sr-003",
+    title: "Access Control Issue",
+    description: "Staff are having trouble with their access cards at the storage room door.",
+    status: "resolved",
+    createdAt: "2023-04-05T11:45:00Z",
+    resolvedAt: "2023-04-07T16:30:00Z",
+    dispensaryId: "disp-003",
+    dispensaryName: "MediGreen",
+    priority: "low",
+    responseNotes: [
+      {
+        id: "note-002",
+        text: "Reader was recalibrated and cards were reprogrammed successfully.",
+        createdAt: "2023-04-06T13:40:00Z",
+        createdBy: "Alice Engineer"
+      },
+      {
+        id: "note-003",
+        text: "Issue resolved, no further action needed.",
+        createdAt: "2023-04-07T16:28:00Z",
+        createdBy: "Alice Engineer"
+      }
+    ]
+  },
+  {
+    id: "sr-004",
+    title: "Emergency Exit Door Alarm",
+    description: "Emergency exit door alarm is not sounding when the door is opened",
+    status: "pending",
+    createdAt: "2023-04-16T10:20:00Z",
+    dispensaryId: "disp-001",
+    dispensaryName: "Green Leaf Dispensary",
+    priority: "high",
+    responseNotes: []
+  },
+  {
+    id: "sr-005",
+    title: "Security System Training Request",
+    description: "New staff members need training on the security systems",
+    status: "resolved",
+    createdAt: "2023-04-01T09:00:00Z",
+    resolvedAt: "2023-04-03T15:00:00Z",
+    dispensaryId: "disp-002",
+    dispensaryName: "Herbal Wellness",
+    priority: "medium",
+    responseNotes: [
+      {
+        id: "note-004",
+        text: "Training session scheduled for April 3rd.",
+        createdAt: "2023-04-01T15:10:00Z",
+        createdBy: "Barbara Scheduler"
+      },
+      {
+        id: "note-005",
+        text: "Training completed successfully with 5 staff members.",
+        createdAt: "2023-04-03T15:00:00Z",
+        createdBy: "Carl Trainer"
+      }
+    ]
+  }
+];
 
-export const generateInitialDispensaries = (): Dispensary[] => {
-  const engineers = generateInitialUsers()
-    .filter((user) => user.role === "user")
-    .map((user) => user.id);
+export const INVOICES_DATA: Invoice[] = [
+  {
+    id: "inv-001",
+    number: "INV-2023-001",
+    dispensaryId: "disp-001",
+    dispensaryName: "Green Leaf Dispensary",
+    date: "2023-04-01T00:00:00Z",
+    amount: 500.00,
+    status: "paid",
+    dueDate: "2023-04-30T00:00:00Z",
+  },
+  {
+    id: "inv-002",
+    number: "INV-2023-002",
+    dispensaryId: "disp-002",
+    dispensaryName: "Herbal Wellness",
+    date: "2023-04-15T00:00:00Z",
+    amount: 750.00,
+    status: "unpaid",
+    dueDate: "2023-05-15T00:00:00Z",
+  },
+  {
+    id: "inv-003",
+    number: "INV-2023-003",
+    dispensaryId: "disp-003",
+    dispensaryName: "MediGreen",
+    date: "2023-05-01T00:00:00Z",
+    amount: 1000.00,
+    status: "paid",
+    dueDate: "2023-05-31T00:00:00Z",
+  },
+];
 
-  return [
-    {
-      id: uuidv4(),
-      name: "Downtown Dispensary",
-      address: "123 Main St, Anytown, USA",
-      category: "both",
-      status: "open",
-      engineers: engineers.slice(0, 2),
-      createdAt: new Date().toISOString(),
-      serviceRequests: generateServiceRequests(),
-    },
-    {
-      id: uuidv4(),
-      name: "Midtown Dispensary",
-      address: "456 Center Ave, Anytown, USA",
-      category: "medical",
-      status: "under-maintenance",
-      engineers: engineers.slice(1, 3),
-      createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      serviceRequests: generateServiceRequests(),
-    },
-    {
-      id: uuidv4(),
-      name: "Uptown Dispensary",
-      address: "789 North St, Anytown, USA",
-      category: "recreational",
-      status: "closed",
-      engineers: engineers.slice(2, 4),
-      createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-      serviceRequests: generateServiceRequests(),
-    },
-    ...Array.from({ length: 10 }, (_, i) => ({
-      id: uuidv4(),
-      name: `Test Dispensary ${i + 1}`,
-      address: `${i + 100} Test St, Anytown, USA`,
-      category: (i % 3 === 0 ? "medical" : i % 3 === 1 ? "recreational" : "both") as "medical" | "recreational" | "both",
-      status: (i % 3 === 0 ? "open" : i % 3 === 1 ? "under-maintenance" : "closed") as "open" | "under-maintenance" | "closed",
-      engineers: engineers.slice(i % engineers.length, (i % engineers.length) + 2),
-      createdAt: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString(),
-      serviceRequests: generateServiceRequests(),
-    })),
-  ];
-};
+export const PAYMENTS_DATA: Payment[] = [
+  {
+    id: "pay-001",
+    invoiceId: "inv-001",
+    date: "2023-04-28T00:00:00Z",
+    amount: 500.00,
+    method: "credit card",
+  },
+  {
+    id: "pay-002",
+    invoiceId: "inv-003",
+    date: "2023-05-29T00:00:00Z",
+    amount: 1000.00,
+    method: "bank transfer",
+  },
+];
+
+export const SERVICE_AGREEMENTS_DATA: ServiceAgreement[] = [
+  {
+    id: "sa-001",
+    dispensaryId: "disp-001",
+    startDate: "2023-01-01T00:00:00Z",
+    endDate: "2023-12-31T00:00:00Z",
+    terms: "Standard security services agreement.",
+  },
+  {
+    id: "sa-002",
+    dispensaryId: "disp-002",
+    startDate: "2023-02-01T00:00:00Z",
+    endDate: "2024-01-31T00:00:00Z",
+    terms: "Enhanced security services agreement.",
+  },
+  {
+    id: "sa-003",
+    dispensaryId: "disp-003",
+    startDate: "2023-03-01T00:00:00Z",
+    endDate: "2024-02-29T00:00:00Z",
+    terms: "Premium security services agreement.",
+  },
+];

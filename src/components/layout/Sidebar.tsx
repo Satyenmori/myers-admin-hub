@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { MENU_ITEMS } from "@/lib/constants";
-import { CircleUserRound, Lock, X } from "lucide-react";
+import { ChevronDown, ChevronRight, CircleUserRound, Lock, X } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import logo from "../../images/myerslogo.webp"
+
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,6 +15,8 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const location = useLocation();
   const { user, isAuthorized } = useAuth();
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+  
   const LucideIcon = ({ name }: { name: string }) => {
     const Icon = (LucideIcons as any)[name] || LucideIcons.CircleHelp;
     return <Icon className="h-5 w-5" />;
@@ -22,6 +25,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const filteredMenuItems = MENU_ITEMS.filter(item => 
     isAuthorized(item.allowedRoles)
   );
+
+  const toggleSubmenu = (path: string) => {
+    if (expandedMenus.includes(path)) {
+      setExpandedMenus(expandedMenus.filter(item => item !== path));
+    } else {
+      setExpandedMenus([...expandedMenus, path]);
+    }
+  };
+
+  const isSubmenuOpen = (path: string) => expandedMenus.includes(path);
+
+  const isSubmenu = (item: any) => item.submenu && item.submenu.length > 0;
+
+  const isSubmenuActive = (item: any) => {
+    if (!isSubmenu(item)) return false;
+    return item.submenu.some((subItem: any) => location.pathname === subItem.path);
+  };
 
   return (
     <aside
@@ -34,7 +54,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           <Link to="/dashboard" className="flex items-center gap-2">
             <div className="relative">
             <img src={logo} alt="User Avatar" className="h-8 w-16 text-myers-blue" />
-              {/* <Lock className="absolute bottom-0 right-0 h-4 w-4 text-myers-blue" /> */}
             </div>
             <div className="flex flex-col">
               <span className="font-poppins font-semibold text-sidebar-foreground">
@@ -73,6 +92,47 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           <div className="space-y-1">
             {filteredMenuItems.map((item) => {
               const isActive = location.pathname === item.path;
+              const hasSubmenuActive = isSubmenuActive(item);
+              
+              if (isSubmenu(item)) {
+                return (
+                  <div key={item.title} className="mb-1">
+                    <button
+                      onClick={() => toggleSubmenu(item.path)}
+                      className={`nav-link ${hasSubmenuActive ? "active" : ""} w-full flex justify-between items-center`}
+                    >
+                      <div className="flex items-center">
+                        <LucideIcon name={item.icon} />
+                        <span>{item.title}</span>
+                      </div>
+                      {isSubmenuOpen(item.path) ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </button>
+                    
+                    {isSubmenuOpen(item.path) && (
+                      <div className="ml-6 mt-1 space-y-1 border-l border-sidebar-border pl-2">
+                        {item.submenu.filter((subItem: any) => isAuthorized(subItem.allowedRoles)).map((subItem: any) => {
+                          const isSubActive = location.pathname === subItem.path;
+                          return (
+                            <Link
+                              key={subItem.path}
+                              to={subItem.path}
+                              className={`nav-link ${isSubActive ? "active" : ""} py-2`}
+                            >
+                              <LucideIcon name={subItem.icon} />
+                              <span>{subItem.title}</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              
               return (
                 <Link
                   key={item.path}

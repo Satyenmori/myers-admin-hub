@@ -10,13 +10,21 @@ import { ThemeProvider } from "./context/ThemeContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Users from "./pages/Users";
+import ManageSupportEngineers from "./pages/ManageSupportEngineers";
 import Dispensaries from "./pages/Dispensaries";
 import ServiceRequests from "./pages/ServiceRequests";
 import NotFound from "./pages/NotFound";
 import MainLayout from "./components/layout/MainLayout";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App: React.FC = () => {
   return (
@@ -35,6 +43,7 @@ const App: React.FC = () => {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/users" element={<Users />} />
+                  <Route path="/manage-support-engineers" element={<ManageSupportEngineers />} />
                   <Route path="/dispensaries" element={<Dispensaries />} />
                   <Route path="/service-requests" element={<ServiceRequests />} />
                 </Route>

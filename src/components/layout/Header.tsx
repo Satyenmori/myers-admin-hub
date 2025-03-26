@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { 
@@ -10,8 +10,17 @@ import {
   Search, 
   Settings, 
   Sun, 
-  User 
+  User,
+  ChevronDown
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -60,24 +69,36 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           <span className="sr-only">Toggle theme</span>
         </button>
 
-        <div className="relative">
-          <div className="inline-flex items-center gap-2 rounded-full bg-accent/50 p-1 pl-1 pr-3">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <User className="h-4 w-4" />
-            </span>
-            <span className="text-sm font-medium hidden sm:inline-block">
-              {user?.name || "User"}
-            </span>
-          </div>
-        </div>
-
-        <button 
-          onClick={logout}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-foreground hover:bg-accent hover:text-accent-foreground"
-        >
-          <LogOut className="h-5 w-5" />
-          <span className="sr-only">Log out</span>
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="outline-none">
+            <div className="inline-flex items-center gap-2 rounded-full bg-accent/50 p-1 pl-1 pr-3 hover:bg-accent cursor-pointer">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <User className="h-4 w-4" />
+              </span>
+              <span className="text-sm font-medium hidden sm:inline-block">
+                {user?.name || "User"}
+              </span>
+              <ChevronDown className="h-4 w-4" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer">
+              <User className="mr-2 h-4 w-4" />
+              <span>Edit Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive" onClick={logout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
