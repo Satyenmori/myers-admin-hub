@@ -5,7 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { MENU_ITEMS } from "@/lib/constants";
 import { CircleUserRound, Lock, X } from "lucide-react";
 import * as LucideIcons from "lucide-react";
-
+import logo from "../../images/myerslogo.webp"
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
@@ -33,8 +33,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
           <Link to="/dashboard" className="flex items-center gap-2">
             <div className="relative">
-              <CircleUserRound className="h-8 w-8 text-myers-yellow" />
-              <Lock className="absolute bottom-0 right-0 h-4 w-4 text-myers-blue" />
+            <img src={logo} alt="User Avatar" className="h-8 w-16 text-myers-blue" />
+              {/* <Lock className="absolute bottom-0 right-0 h-4 w-4 text-myers-blue" /> */}
             </div>
             <div className="flex flex-col">
               <span className="font-poppins font-semibold text-sidebar-foreground">

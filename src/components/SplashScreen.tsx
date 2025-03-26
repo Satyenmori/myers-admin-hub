@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { CircleUserRound, Lock } from "lucide-react";
-
+import logo from "../../src/images/myerslogo.webp"
 const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [animationStage, setAnimationStage] = useState(0);
 
@@ -30,10 +30,10 @@ const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
       <div className="text-center">
         <div className="flex items-center justify-center mb-6 relative">
           <div className={`transition-all duration-700 ${animationStage >= 1 ? "opacity-100" : "opacity-0"}`}>
-            <CircleUserRound className="w-16 h-16 text-myers-yellow animate-float" />
+          <img src={logo} alt="User Avatar" className="h-20 w-40 text-myers-blue" />
           </div>
           <div className={`absolute transition-all duration-700 ${animationStage >= 2 ? "opacity-100" : "opacity-0"}`}>
-            <Lock className="w-8 h-8 text-myers-blue" />
+            {/* <Lock className="w-8 h-8 text-myers-blue" /> */}
           </div>
         </div>
         <h1 className={`text-4xl font-poppins font-bold text-white mb-2 transition-all duration-700 ${animationStage >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>

@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { CircleUserRound, Lock } from "lucide-react";
-
+import logo from "../../images/myerslogo.webp"
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,8 +24,9 @@ const LoginForm: React.FC = () => {
     <div className="w-full max-w-md mx-auto p-6">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center mb-6 relative">
-          <CircleUserRound className="w-16 h-16 text-myers-blue animate-float" />
-          <Lock className="absolute w-8 h-8 text-myers-yellow" />
+        <img src={logo} alt="User Avatar" className="h-20 w-40 text-myers-blue animate-float" />
+          {/* <CircleUserRound className="w-16 h-16 text-myers-blue animate-float" /> */}
+          {/* <Lock className="absolute w-8 h-8 text-myers-yellow" /> */}
         </div>
         <h1 className="text-3xl font-poppins font-bold mb-2">Welcome Back</h1>
         <p className="text-muted-foreground">Sign in to your account to continue</p>
