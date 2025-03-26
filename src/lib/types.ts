@@ -1,3 +1,4 @@
+
 export type Role = 'admin' | 'manager' | 'user';
 
 export interface User {
@@ -14,6 +15,8 @@ export interface Dispensary {
   id: string;
   name: string;
   address: string;
+  phone?: string;
+  email?: string;
   category: 'medical' | 'recreational' | 'both';
   status: 'open' | 'under-maintenance' | 'closed';
   engineers: string[];
@@ -102,4 +105,5 @@ export interface MenuItem {
   path: string;
   icon: string;
   allowedRoles: Role[];
+  submenu?: MenuItem[];
 }

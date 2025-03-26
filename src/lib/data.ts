@@ -1,3 +1,4 @@
+
 import { Dispensary, Invoice, Payment, Role, ServiceAgreement, ServiceRequest, User } from "./types";
 
 export const USERS_DATA: User[] = [
@@ -34,8 +35,11 @@ export const DISPENSARIES_DATA: Dispensary[] = [
     address: "123 Main St, Anytown",
     phone: "555-1234",
     email: "info@greenleaf.com",
-    status: "active",
+    status: "open", // Fixed status to match Dispensary type
     createdAt: "2023-02-15T00:00:00Z",
+    category: "medical", // Added required field
+    engineers: [], // Added required field
+    serviceRequests: [], // Added required field
   },
   {
     id: "disp-002",
@@ -43,8 +47,11 @@ export const DISPENSARIES_DATA: Dispensary[] = [
     address: "456 Elm St, Anytown",
     phone: "555-5678",
     email: "contact@herbalwellness.com",
-    status: "inactive",
+    status: "closed", // Fixed status to match Dispensary type
     createdAt: "2023-03-01T00:00:00Z",
+    category: "recreational", // Added required field
+    engineers: [], // Added required field
+    serviceRequests: [], // Added required field
   },
   {
     id: "disp-003",
@@ -52,8 +59,11 @@ export const DISPENSARIES_DATA: Dispensary[] = [
     address: "789 Oak St, Anytown",
     phone: "555-9012",
     email: "hello@medigreen.com",
-    status: "active",
+    status: "open", // Fixed status to match Dispensary type
     createdAt: "2023-03-15T00:00:00Z",
+    category: "both", // Added required field
+    engineers: [], // Added required field
+    serviceRequests: [], // Added required field
   },
 ];
 
@@ -153,33 +163,30 @@ export const SERVICE_REQUESTS_DATA: ServiceRequest[] = [
 export const INVOICES_DATA: Invoice[] = [
   {
     id: "inv-001",
-    number: "INV-2023-001",
     dispensaryId: "disp-001",
-    dispensaryName: "Green Leaf Dispensary",
-    date: "2023-04-01T00:00:00Z",
     amount: 500.00,
-    status: "paid",
     dueDate: "2023-04-30T00:00:00Z",
+    createdAt: "2023-04-01T00:00:00Z",
+    status: "paid",
+    items: [], // Added required field
   },
   {
     id: "inv-002",
-    number: "INV-2023-002",
     dispensaryId: "disp-002",
-    dispensaryName: "Herbal Wellness",
-    date: "2023-04-15T00:00:00Z",
     amount: 750.00,
-    status: "unpaid",
     dueDate: "2023-05-15T00:00:00Z",
+    createdAt: "2023-04-15T00:00:00Z",
+    status: "pending", // Fixed to use valid status
+    items: [], // Added required field
   },
   {
     id: "inv-003",
-    number: "INV-2023-003",
     dispensaryId: "disp-003",
-    dispensaryName: "MediGreen",
-    date: "2023-05-01T00:00:00Z",
     amount: 1000.00,
-    status: "paid",
     dueDate: "2023-05-31T00:00:00Z",
+    createdAt: "2023-05-01T00:00:00Z",
+    status: "paid",
+    items: [], // Added required field
   },
 ];
 
@@ -187,16 +194,20 @@ export const PAYMENTS_DATA: Payment[] = [
   {
     id: "pay-001",
     invoiceId: "inv-001",
-    date: "2023-04-28T00:00:00Z",
+    dispensaryId: "disp-001", // Added required field
     amount: 500.00,
-    method: "credit card",
+    method: "credit_card", // Fixed to use valid method
+    status: "processed", // Added required field
+    createdAt: "2023-04-28T00:00:00Z",
   },
   {
     id: "pay-002",
     invoiceId: "inv-003",
-    date: "2023-05-29T00:00:00Z",
+    dispensaryId: "disp-003", // Added required field
     amount: 1000.00,
-    method: "bank transfer",
+    method: "bank_transfer", // Fixed to use valid method
+    status: "processed", // Added required field
+    createdAt: "2023-05-29T00:00:00Z",
   },
 ];
 
@@ -207,6 +218,8 @@ export const SERVICE_AGREEMENTS_DATA: ServiceAgreement[] = [
     startDate: "2023-01-01T00:00:00Z",
     endDate: "2023-12-31T00:00:00Z",
     terms: "Standard security services agreement.",
+    status: "active", // Added required field
+    createdAt: "2023-01-01T00:00:00Z", // Added required field
   },
   {
     id: "sa-002",
@@ -214,6 +227,8 @@ export const SERVICE_AGREEMENTS_DATA: ServiceAgreement[] = [
     startDate: "2023-02-01T00:00:00Z",
     endDate: "2024-01-31T00:00:00Z",
     terms: "Enhanced security services agreement.",
+    status: "active", // Added required field
+    createdAt: "2023-02-01T00:00:00Z", // Added required field
   },
   {
     id: "sa-003",
@@ -221,5 +236,38 @@ export const SERVICE_AGREEMENTS_DATA: ServiceAgreement[] = [
     startDate: "2023-03-01T00:00:00Z",
     endDate: "2024-02-29T00:00:00Z",
     terms: "Premium security services agreement.",
+    status: "active", // Added required field
+    createdAt: "2023-03-01T00:00:00Z", // Added required field
   },
 ];
+
+// Adding the missing generateInitialUsers function
+export const generateInitialUsers = (): User[] => {
+  // For now, just return the predefined users
+  return [
+    {
+      id: "user-001",
+      name: "Admin User",
+      email: "admin@myerssecurity.com", // Updated to match the login form example email
+      role: "admin",
+      status: "active",
+      createdAt: "2023-01-01T00:00:00Z",
+    },
+    {
+      id: "user-002",
+      name: "Manager User",
+      email: "manager@myerssecurity.com", // Updated to match the login form example email
+      role: "manager",
+      status: "active",
+      createdAt: "2023-01-02T00:00:00Z",
+    },
+    {
+      id: "user-003",
+      name: "Regular User",
+      email: "user@myerssecurity.com", // Updated to match the login form example email
+      role: "user",
+      status: "active", // Changed to active so the user can log in
+      createdAt: "2023-01-03T00:00:00Z",
+    },
+  ];
+};
