@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const { mode, toggleTheme } = useTheme();
 
   return (
-    <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-30 flex items-center px-4">
+    <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-40 flex items-center px-4 sticky top-0">
       <div className="flex items-center gap-4">
         <button
           onClick={toggleSidebar}
