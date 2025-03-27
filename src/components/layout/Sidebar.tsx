@@ -75,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </div>
         
         <div className="px-4 py-4">
-          <div className="flex items-center gap-3 mb-8">
+          {/* <div className="flex items-center gap-3 mb-8">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground">
               <LucideIcons.User className="h-5 w-5" />
             </span>
@@ -87,7 +87,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                 {user?.role || "Role"}
               </span>
             </div>
-          </div>
+          </div> */}
           
           <div className="space-y-1">
             {filteredMenuItems.map((item) => {
@@ -103,7 +103,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     >
                       <div className="flex items-center">
                         <LucideIcon name={item.icon} />
-                        <span>{item.title}</span>
+                        <span className="ml-3">{item.title}</span>
                       </div>
                       {isSubmenuOpen(item.path) ? (
                         <ChevronDown className="h-4 w-4" />
@@ -148,12 +148,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </div>
         
         <div className="mt-auto p-4 border-t border-sidebar-border">
-          <div className="rounded-lg bg-sidebar-accent/50 p-4">
+          {/* <div className="rounded-lg bg-sidebar-accent/50 p-4">
             <h4 className="text-sm font-medium text-sidebar-foreground mb-2">
               Need Help?
             </h4>
             <p className="text-xs text-sidebar-foreground/70 mb-3">
-              Check our documentation for help with the admin panel.
+              Check our documentation.
             </p>
             <a
               href="#"
@@ -162,6 +162,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <LucideIcons.HelpCircle className="h-3 w-3 mr-1" />
               View Documentation
             </a>
+          </div> */}
+          <div className="flex items-center gap-3 mb-8">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sidebar-primary text-sidebar-primary-foreground">
+              <LucideIcons.User className="h-5 w-5" />
+            </span>
+            <div className="flex flex-col">
+              <span className="font-medium text-sidebar-foreground">
+                {user?.name || "User"}
+              </span>
+              <span className="text-xs text-sidebar-foreground/70 capitalize">
+                {user?.role || "Role"}
+              </span>
+            </div>
           </div>
         </div>
       </div>

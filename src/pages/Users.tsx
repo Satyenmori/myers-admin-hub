@@ -144,7 +144,7 @@ const Users = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Users</h1>
+          <h1 className="text-2xl font-bold">Users</h1>
           <p className="text-muted-foreground mt-1">
             Manage users and their permissions
           </p>

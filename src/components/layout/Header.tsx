@@ -75,10 +75,10 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 <User className="h-4 w-4" />
               </span>
-              <span className="text-sm font-medium hidden sm:inline-block">
+              {/* <span className="text-sm font-medium hidden sm:inline-block">
                 {user?.name || "User"}
-              </span>
-              <ChevronDown className="h-4 w-4" />
+              </span> */}
+              {/* <ChevronDown className="h-4 w-4" /> */}
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
