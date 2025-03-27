@@ -21,6 +21,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface HeaderProps {
   toggleSidebar: () => void;
@@ -29,6 +30,16 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   const { user, logout } = useAuth();
   const { mode, toggleTheme } = useTheme();
+
+  // Generate user initials for avatar
+  const getUserInitials = () => {
+    if (!user?.name) return "U";
+    
+    const nameParts = user.name.split(" ");
+    if (nameParts.length === 1) return nameParts[0].charAt(0).toUpperCase();
+    
+    return (nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
+  };
 
   return (
     <header className="h-16 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-40 flex items-center px-4 sticky top-0">
@@ -71,29 +82,51 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
         <DropdownMenu>
           <DropdownMenuTrigger className="outline-none">
-            <div className="inline-flex items-center gap-2 rounded-full bg-accent/50 p-1 pl-1 pr-3 hover:bg-accent cursor-pointer">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <User className="h-4 w-4" />
-              </span>
-              {/* <span className="text-sm font-medium hidden sm:inline-block">
+            <div className="flex items-center gap-2 rounded-full bg-accent/50 p-1 pr-3 hover:bg-accent cursor-pointer">
+              <Avatar className="h-8 w-8 border-2 border-primary/20">
+                <AvatarFallback className="bg-primary text-primary-foreground font-medium">
+                  {getUserInitials()}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium hidden sm:inline-block">
                 {user?.name || "User"}
-              </span> */}
-              {/* <ChevronDown className="h-4 w-4" /> */}
+              </span>
+              <ChevronDown className="h-4 w-4 opacity-70" />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuContent align="end" className="w-72 p-3">
+            <div className="flex items-center gap-3 p-2">
+              <Avatar className="h-12 w-12 border-2 border-primary/20">
+                <AvatarFallback className="bg-primary text-primary-foreground font-medium text-lg">
+                  {getUserInitials()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="space-y-0.5">
+                <h4 className="font-medium">{user?.name || "User"}</h4>
+                <p className="text-xs text-muted-foreground">{user?.email || "user@example.com"}</p>
+                <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary capitalize">
+                  {user?.role || "User"}
+                </span>
+              </div>
+            </div>
+            
+            <DropdownMenuSeparator className="my-2" />
+            
+            <DropdownMenuItem className="cursor-pointer flex items-center p-2 rounded-md hover:bg-accent">
               <User className="mr-2 h-4 w-4" />
               <span>Edit Profile</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuItem className="cursor-pointer flex items-center p-2 rounded-md hover:bg-accent">
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive" onClick={logout}>
+            
+            <DropdownMenuSeparator className="my-2" />
+            
+            <DropdownMenuItem 
+              className="cursor-pointer flex items-center p-2 rounded-md text-destructive hover:bg-destructive/10 hover:text-destructive" 
+              onClick={logout}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log out</span>
             </DropdownMenuItem>

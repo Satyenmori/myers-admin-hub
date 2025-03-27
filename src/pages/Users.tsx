@@ -1,14 +1,15 @@
 
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { LOCAL_STORAGE_KEYS } from "@/lib/constants";
 import { Role, User } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
-import { Check, ChevronDown, ChevronLeft, ChevronRight, Edit, MoreHorizontal, Plus, Search, Trash, User as UserIcon, X } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
+import { ChevronLeft, ChevronRight, Edit, Plus, Search, Trash, User as UserIcon, X } from "lucide-react";
 
 const Users = () => {
+  const navigate = useNavigate();
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, []);
   const [search, setSearch] = useState("");
@@ -16,14 +17,6 @@ const Users = () => {
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [newUser, setNewUser] = useState<Partial<User>>({
-    name: "",
-    email: "",
-    role: "user",
-    status: "active",
-  });
 
   // Filtering logic
   const filteredUsers = users.filter((user) => {
@@ -49,72 +42,6 @@ const Users = () => {
     setRoleFilter("");
     setStatusFilter("");
     setCurrentPage(1);
-  };
-
-  // CRUD operations
-  const handleAddUser = () => {
-    const userWithSameEmail = users.find(
-      (u) => u.email.toLowerCase() === newUser.email?.toLowerCase()
-    );
-
-    if (userWithSameEmail) {
-      toast({
-        title: "Error",
-        description: "A user with this email already exists",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const userToAdd: User = {
-      id: uuidv4(),
-      name: newUser.name || "",
-      email: newUser.email || "",
-      role: newUser.role as Role || "user",
-      status: newUser.status as "active" | "inactive" || "active",
-      createdAt: new Date().toISOString(),
-    };
-
-    setUsers([...users, userToAdd]);
-    setNewUser({
-      name: "",
-      email: "",
-      role: "user",
-      status: "active",
-    });
-    setIsAddUserModalOpen(false);
-    toast({
-      title: "Success",
-      description: "User added successfully",
-    });
-  };
-
-  const handleUpdateUser = () => {
-    if (!editingUser) return;
-
-    const userWithSameEmail = users.find(
-      (u) => u.email.toLowerCase() === editingUser.email.toLowerCase() && u.id !== editingUser.id
-    );
-
-    if (userWithSameEmail) {
-      toast({
-        title: "Error",
-        description: "Another user with this email already exists",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const updatedUsers = users.map((u) =>
-      u.id === editingUser.id ? editingUser : u
-    );
-
-    setUsers(updatedUsers);
-    setEditingUser(null);
-    toast({
-      title: "Success",
-      description: "User updated successfully",
-    });
   };
 
   const handleDeleteUser = (userId: string) => {
@@ -150,13 +77,13 @@ const Users = () => {
           </p>
         </div>
         {canAdd && (
-          <button
-            onClick={() => setIsAddUserModalOpen(true)}
+          <Link
+            to="/users/add"
             className="btn-primary inline-flex items-center gap-2 self-start sm:self-auto"
           >
             <Plus className="h-4 w-4" />
             Add User
-          </button>
+          </Link>
         )}
       </div>
 
@@ -259,12 +186,12 @@ const Users = () => {
                     {(canEdit || canDelete) && (
                       <td className="px-4 py-3 text-right space-x-2">
                         {canEdit && (
-                          <button
-                            onClick={() => setEditingUser({ ...user })}
+                          <Link
+                            to={`/users/edit/${user.id}`}
                             className="text-blue-500 hover:text-blue-700 inline-flex items-center justify-center h-8 w-8 rounded-md hover:bg-accent"
                           >
                             <Edit className="h-4 w-4" />
-                          </button>
+                          </Link>
                         )}
                         {canDelete && (
                           <button
@@ -338,206 +265,6 @@ const Users = () => {
           </div>
         )}
       </div>
-
-      {/* Add User Modal */}
-      {isAddUserModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-background rounded-lg shadow-lg w-full max-w-md overflow-hidden animate-scale-in">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-xl font-semibold">Add New User</h2>
-              <button
-                onClick={() => setIsAddUserModalOpen(false)}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="p-4 space-y-4">
-              <div>
-                <label htmlFor="name" className="form-label block mb-1">
-                  Name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  value={newUser.name}
-                  onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
-                  className="form-input"
-                  placeholder="John Doe"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="form-label block mb-1">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={newUser.email}
-                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                  className="form-input"
-                  placeholder="john@example.com"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="role" className="form-label block mb-1">
-                  Role
-                </label>
-                <select
-                  id="role"
-                  value={newUser.role}
-                  onChange={(e) => setNewUser({ ...newUser, role: e.target.value as Role })}
-                  className="form-input"
-                  required
-                >
-                  <option value="user">User</option>
-                  <option value="manager">Manager</option>
-                  {currentUser?.role === "admin" && (
-                    <option value="admin">Admin</option>
-                  )}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="status" className="form-label block mb-1">
-                  Status
-                </label>
-                <select
-                  id="status"
-                  value={newUser.status}
-                  onChange={(e) => setNewUser({ ...newUser, status: e.target.value as "active" | "inactive" })}
-                  className="form-input"
-                  required
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
-            </div>
-            <div className="flex justify-end gap-2 p-4 border-t">
-              <button
-                onClick={() => setIsAddUserModalOpen(false)}
-                className="px-4 py-2 text-sm rounded-md border hover:bg-muted"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddUser}
-                disabled={!newUser.name || !newUser.email}
-                className="btn-primary"
-              >
-                Add User
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Edit User Modal */}
-      {editingUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-background rounded-lg shadow-lg w-full max-w-md overflow-hidden animate-scale-in">
-            <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="text-xl font-semibold">Edit User</h2>
-              <button
-                onClick={() => setEditingUser(null)}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="p-4 space-y-4">
-              <div>
-                <label htmlFor="edit-name" className="form-label block mb-1">
-                  Name
-                </label>
-                <input
-                  id="edit-name"
-                  type="text"
-                  value={editingUser.name}
-                  onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
-                  className="form-input"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="edit-email" className="form-label block mb-1">
-                  Email
-                </label>
-                <input
-                  id="edit-email"
-                  type="email"
-                  value={editingUser.email}
-                  onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
-                  className="form-input"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="edit-role" className="form-label block mb-1">
-                  Role
-                </label>
-                <select
-                  id="edit-role"
-                  value={editingUser.role}
-                  onChange={(e) => setEditingUser({ ...editingUser, role: e.target.value as Role })}
-                  className="form-input"
-                  required
-                  disabled={editingUser.id === currentUser?.id}
-                >
-                  <option value="user">User</option>
-                  <option value="manager">Manager</option>
-                  {currentUser?.role === "admin" && (
-                    <option value="admin">Admin</option>
-                  )}
-                </select>
-                {editingUser.id === currentUser?.id && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    You cannot change your own role
-                  </p>
-                )}
-              </div>
-              <div>
-                <label htmlFor="edit-status" className="form-label block mb-1">
-                  Status
-                </label>
-                <select
-                  id="edit-status"
-                  value={editingUser.status}
-                  onChange={(e) => setEditingUser({ ...editingUser, status: e.target.value as "active" | "inactive" })}
-                  className="form-input"
-                  required
-                  disabled={editingUser.id === currentUser?.id}
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-                {editingUser.id === currentUser?.id && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    You cannot change your own status
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="flex justify-end gap-2 p-4 border-t">
-              <button
-                onClick={() => setEditingUser(null)}
-                className="px-4 py-2 text-sm rounded-md border hover:bg-muted"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleUpdateUser}
-                disabled={!editingUser.name || !editingUser.email}
-                className="btn-primary"
-              >
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

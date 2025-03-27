@@ -1,4 +1,3 @@
-
 export type Role = 'admin' | 'manager' | 'user';
 
 export interface User {
@@ -30,11 +29,16 @@ export interface ServiceRequest {
   description: string;
   status: "pending" | "in-progress" | "resolved";
   createdAt: string;
-  resolvedAt?: string;
   dispensaryId: string;
   dispensaryName: string;
   priority: "low" | "medium" | "high";
-  responseNotes: ResponseNote[];
+  responseNotes: {
+    id: string;
+    text: string;
+    createdAt: string;
+    createdBy: string;
+  }[];
+  resolvedAt?: string;
 }
 
 export interface ResponseNote {
