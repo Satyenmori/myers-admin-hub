@@ -13,8 +13,11 @@ const AddSupportEngineer: React.FC = () => {
   const [users, setUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, []);
   
   const [formData, setFormData] = useState<Partial<User>>({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    password: "",
+    phone: "",
     role: "user",
     status: "active",
   });
@@ -28,7 +31,7 @@ const AddSupportEngineer: React.FC = () => {
     e.preventDefault();
     
     // Validation
-    if (!formData.name || !formData.email) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -51,11 +54,18 @@ const AddSupportEngineer: React.FC = () => {
       return;
     }
 
+    // Create full name from first and last name
+    const fullName = `${formData.firstName} ${formData.lastName}`;
+
     // Create new engineer with fixed role=user
     const newEngineer: User = {
       id: uuidv4(),
-      name: formData.name || "",
+      name: fullName,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       email: formData.email || "",
+      password: formData.password,
+      phone: formData.phone,
       role: "user", // Always set role to "user" for support engineers
       status: formData.status as "active" | "inactive" || "active",
       createdAt: new Date().toISOString(),
@@ -101,17 +111,33 @@ const AddSupportEngineer: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label htmlFor="name" className="form-label block">
-                Full Name <span className="text-red-500">*</span>
+              <label htmlFor="firstName" className="form-label block">
+                First Name <span className="text-red-500">*</span>
               </label>
               <input
-                id="name"
-                name="name"
+                id="firstName"
+                name="firstName"
                 type="text"
-                value={formData.name || ""}
+                value={formData.firstName || ""}
                 onChange={handleChange}
                 className="form-input"
-                placeholder="John Technician"
+                placeholder="John"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="lastName" className="form-label block">
+                Last Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="lastName"
+                name="lastName"
+                type="text"
+                value={formData.lastName || ""}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Technician"
                 required
               />
             </div>
@@ -129,6 +155,37 @@ const AddSupportEngineer: React.FC = () => {
                 className="form-input"
                 placeholder="john@example.com"
                 required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="password" className="form-label block">
+                Password <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                value={formData.password || ""}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label htmlFor="phone" className="form-label block">
+                Phone Number
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone || ""}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="(123) 456-7890"
               />
             </div>
 

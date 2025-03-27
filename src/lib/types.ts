@@ -9,6 +9,10 @@ export interface User {
   status: 'active' | 'inactive';
   avatar?: string;
   createdAt: string;
+  firstName?: string;
+  lastName?: string;
+  password?: string;
+  phone?: string;
 }
 
 export interface Dispensary {
@@ -106,4 +110,16 @@ export interface MenuItem {
   icon: string;
   allowedRoles: Role[];
   submenu?: MenuItem[];
+}
+
+export interface KnowledgeBaseEntry {
+  id: string;
+  title: string;
+  category: 'Services' | 'Case Studies' | 'Testimonials';
+  description: string;
+  videoUrl?: string;
+  blogUrl?: string;
+  fileUrl?: string;
+  status: 'active' | 'inactive';
+  createdAt: string;
 }

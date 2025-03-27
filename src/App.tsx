@@ -20,6 +20,10 @@ import AddUser from "./pages/AddUser";
 import EditUser from "./pages/EditUser";
 import AddSupportEngineer from "./pages/AddSupportEngineer";
 import EditSupportEngineer from "./pages/EditSupportEngineer";
+import KnowledgeBase from "./pages/KnowledgeBase";
+import AddKnowledgeBaseEntry from "./pages/AddKnowledgeBaseEntry";
+import EditKnowledgeBaseEntry from "./pages/EditKnowledgeBaseEntry";
+import ViewKnowledgeBaseEntry from "./pages/ViewKnowledgeBaseEntry";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -56,6 +60,10 @@ const App: React.FC = () => {
                   <Route path="/manage-support-engineers/edit/:engineerId" element={<EditSupportEngineer />} />
                   <Route path="/dispensaries" element={<Dispensaries />} />
                   <Route path="/service-requests" element={<ServiceRequests />} />
+                  <Route path="/knowledge-base" element={<KnowledgeBase />} />
+                  <Route path="/knowledge-base/add" element={<AddKnowledgeBaseEntry />} />
+                  <Route path="/knowledge-base/edit/:entryId" element={<EditKnowledgeBaseEntry />} />
+                  <Route path="/knowledge-base/view/:entryId" element={<ViewKnowledgeBaseEntry />} />
                 </Route>
                 
                 <Route path="*" element={<NotFound />} />
