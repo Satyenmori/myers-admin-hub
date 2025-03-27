@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import useLocalStorage from "@/hooks/useLocalStorage";
@@ -7,11 +7,12 @@ import { LOCAL_STORAGE_KEYS } from "@/lib/constants";
 import { Role, User } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
 import { ChevronLeft, ChevronRight, Edit, Plus, Search, Trash, User as UserIcon, X } from "lucide-react";
+import { USERS_DATA } from "@/lib/data";
 
 const Users = () => {
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
-  const [users, setUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, []);
+  const [storedUsers, setStoredUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, USERS_DATA);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("");
@@ -19,7 +20,7 @@ const Users = () => {
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   // Filtering logic
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = storedUsers.filter((user) => {
     const matchesSearch = user.name.toLowerCase().includes(search.toLowerCase()) || 
                           user.email.toLowerCase().includes(search.toLowerCase());
     const matchesRole = roleFilter ? user.role === roleFilter : true;
@@ -54,8 +55,8 @@ const Users = () => {
       return;
     }
 
-    const updatedUsers = users.filter((u) => u.id !== userId);
-    setUsers(updatedUsers);
+    const updatedUsers = storedUsers.filter((u) => u.id !== userId);
+    setStoredUsers(updatedUsers);
     toast({
       title: "Success",
       description: "User deleted successfully",

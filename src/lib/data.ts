@@ -35,11 +35,11 @@ export const DISPENSARIES_DATA: Dispensary[] = [
     address: "123 Main St, Anytown",
     phone: "555-1234",
     email: "info@greenleaf.com",
-    status: "open", // Fixed status to match Dispensary type
+    status: "open",
     createdAt: "2023-02-15T00:00:00Z",
-    category: "medical", // Added required field
-    engineers: [], // Added required field
-    serviceRequests: [], // Added required field
+    category: "medical",
+    engineers: [],
+    serviceRequests: [],
   },
   {
     id: "disp-002",
@@ -47,11 +47,11 @@ export const DISPENSARIES_DATA: Dispensary[] = [
     address: "456 Elm St, Anytown",
     phone: "555-5678",
     email: "contact@herbalwellness.com",
-    status: "closed", // Fixed status to match Dispensary type
+    status: "closed",
     createdAt: "2023-03-01T00:00:00Z",
-    category: "recreational", // Added required field
-    engineers: [], // Added required field
-    serviceRequests: [], // Added required field
+    category: "recreational",
+    engineers: [],
+    serviceRequests: [],
   },
   {
     id: "disp-003",
@@ -59,11 +59,11 @@ export const DISPENSARIES_DATA: Dispensary[] = [
     address: "789 Oak St, Anytown",
     phone: "555-9012",
     email: "hello@medigreen.com",
-    status: "open", // Fixed status to match Dispensary type
+    status: "open",
     createdAt: "2023-03-15T00:00:00Z",
-    category: "both", // Added required field
-    engineers: [], // Added required field
-    serviceRequests: [], // Added required field
+    category: "both",
+    engineers: [],
+    serviceRequests: [],
   },
 ];
 
@@ -168,7 +168,7 @@ export const INVOICES_DATA: Invoice[] = [
     dueDate: "2023-04-30T00:00:00Z",
     createdAt: "2023-04-01T00:00:00Z",
     status: "paid",
-    items: [], // Added required field
+    items: [],
   },
   {
     id: "inv-002",
@@ -176,8 +176,8 @@ export const INVOICES_DATA: Invoice[] = [
     amount: 750.00,
     dueDate: "2023-05-15T00:00:00Z",
     createdAt: "2023-04-15T00:00:00Z",
-    status: "pending", // Fixed to use valid status
-    items: [], // Added required field
+    status: "pending",
+    items: [],
   },
   {
     id: "inv-003",
@@ -186,7 +186,7 @@ export const INVOICES_DATA: Invoice[] = [
     dueDate: "2023-05-31T00:00:00Z",
     createdAt: "2023-05-01T00:00:00Z",
     status: "paid",
-    items: [], // Added required field
+    items: [],
   },
 ];
 
@@ -194,19 +194,19 @@ export const PAYMENTS_DATA: Payment[] = [
   {
     id: "pay-001",
     invoiceId: "inv-001",
-    dispensaryId: "disp-001", // Added required field
+    dispensaryId: "disp-001",
     amount: 500.00,
-    method: "credit_card", // Fixed to use valid method
-    status: "processed", // Added required field
+    method: "credit_card",
+    status: "processed",
     createdAt: "2023-04-28T00:00:00Z",
   },
   {
     id: "pay-002",
     invoiceId: "inv-003",
-    dispensaryId: "disp-003", // Added required field
+    dispensaryId: "disp-003",
     amount: 1000.00,
-    method: "bank_transfer", // Fixed to use valid method
-    status: "processed", // Added required field
+    method: "bank_transfer",
+    status: "processed",
     createdAt: "2023-05-29T00:00:00Z",
   },
 ];
@@ -218,8 +218,8 @@ export const SERVICE_AGREEMENTS_DATA: ServiceAgreement[] = [
     startDate: "2023-01-01T00:00:00Z",
     endDate: "2023-12-31T00:00:00Z",
     terms: "Standard security services agreement.",
-    status: "active", // Added required field
-    createdAt: "2023-01-01T00:00:00Z", // Added required field
+    status: "active",
+    createdAt: "2023-01-01T00:00:00Z",
   },
   {
     id: "sa-002",
@@ -227,8 +227,8 @@ export const SERVICE_AGREEMENTS_DATA: ServiceAgreement[] = [
     startDate: "2023-02-01T00:00:00Z",
     endDate: "2024-01-31T00:00:00Z",
     terms: "Enhanced security services agreement.",
-    status: "active", // Added required field
-    createdAt: "2023-02-01T00:00:00Z", // Added required field
+    status: "active",
+    createdAt: "2023-02-01T00:00:00Z",
   },
   {
     id: "sa-003",
@@ -236,19 +236,19 @@ export const SERVICE_AGREEMENTS_DATA: ServiceAgreement[] = [
     startDate: "2023-03-01T00:00:00Z",
     endDate: "2024-02-29T00:00:00Z",
     terms: "Premium security services agreement.",
-    status: "active", // Added required field
-    createdAt: "2023-03-01T00:00:00Z", // Added required field
+    status: "active",
+    createdAt: "2023-03-01T00:00:00Z",
   },
 ];
 
-// Adding the missing generateInitialUsers function
+// Function to generate initial users for the application
 export const generateInitialUsers = (): User[] => {
-  // For now, just return the predefined users
+  // Return the predefined users
   return [
     {
       id: "user-001",
       name: "Admin User",
-      email: "admin@myerssecurity.com", // Updated to match the login form example email
+      email: "admin@myerssecurity.com",
       role: "admin",
       status: "active",
       createdAt: "2023-01-01T00:00:00Z",
@@ -256,7 +256,7 @@ export const generateInitialUsers = (): User[] => {
     {
       id: "user-002",
       name: "Manager User",
-      email: "manager@myerssecurity.com", // Updated to match the login form example email
+      email: "manager@myerssecurity.com",
       role: "manager",
       status: "active",
       createdAt: "2023-01-02T00:00:00Z",
@@ -264,9 +264,9 @@ export const generateInitialUsers = (): User[] => {
     {
       id: "user-003",
       name: "Regular User",
-      email: "user@myerssecurity.com", // Updated to match the login form example email
+      email: "user@myerssecurity.com",
       role: "user",
-      status: "active", // Changed to active so the user can log in
+      status: "active",
       createdAt: "2023-01-03T00:00:00Z",
     },
   ];

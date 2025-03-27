@@ -8,11 +8,12 @@ import { Role, User } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Save, User as UserIcon } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import { USERS_DATA } from "@/lib/data";
 
 const AddUser: React.FC = () => {
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
-  const [users, setUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, []);
+  const [storedUsers, setStoredUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, USERS_DATA);
   
   const [formData, setFormData] = useState<Partial<User>>({
     name: "",
@@ -40,7 +41,7 @@ const AddUser: React.FC = () => {
     }
 
     // Check for duplicate email
-    const duplicateEmail = users.find(
+    const duplicateEmail = storedUsers.find(
       user => user.email.toLowerCase() === formData.email?.toLowerCase()
     );
 
@@ -63,7 +64,9 @@ const AddUser: React.FC = () => {
       createdAt: new Date().toISOString(),
     };
     
-    setUsers([...users, newUser]);
+    // Update localStorage with new user
+    const updatedUsers = [...storedUsers, newUser];
+    setStoredUsers(updatedUsers);
     
     toast({
       title: "Success",

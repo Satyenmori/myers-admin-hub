@@ -28,12 +28,12 @@ const ForgotPassword: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#E3E4E4] p-4">
       <div className="w-full max-w-md mx-auto glass-card shadow-lg relative overflow-hidden rounded-md">
-        {/* Curved divider */}
+        {/* Curved divider with gradient background */}
         <div className="absolute w-full h-full">
-          <div className="h-1/2 bg-gray-900"></div>
+          <div className="h-1/2 bg-gradient-to-r from-gray-800 to-gray-900"></div>
           <div className="h-1/2 bg-white"></div>
-          <div className="absolute left-0 right-0 h-16 top-1/2 -mt-4 overflow-hidden">
-            <div className="w-full h-16 bg-white rounded-t-full"></div>
+          <div className="absolute left-0 right-0 h-16 -translate-y-8 overflow-hidden">
+            <div className="w-full h-16 bg-white rounded-t-full transform"></div>
           </div>
         </div>
 

@@ -7,12 +7,13 @@ import { LOCAL_STORAGE_KEYS } from "@/lib/constants";
 import { Role, User } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, Save, User as UserIcon } from "lucide-react";
+import { USERS_DATA } from "@/lib/data";
 
 const EditUser: React.FC = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
-  const [users, setUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, []);
+  const [storedUsers, setStoredUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, USERS_DATA);
   
   const [formData, setFormData] = useState<Partial<User>>({
     name: "",
@@ -23,7 +24,7 @@ const EditUser: React.FC = () => {
 
   useEffect(() => {
     if (userId) {
-      const userToEdit = users.find(u => u.id === userId);
+      const userToEdit = storedUsers.find(u => u.id === userId);
       if (userToEdit) {
         setFormData(userToEdit);
       } else {
@@ -35,7 +36,7 @@ const EditUser: React.FC = () => {
         navigate("/users");
       }
     }
-  }, [userId, users, navigate]);
+  }, [userId, storedUsers, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -56,7 +57,7 @@ const EditUser: React.FC = () => {
     }
 
     // Check for duplicate email
-    const duplicateEmail = users.find(
+    const duplicateEmail = storedUsers.find(
       user => user.email.toLowerCase() === formData.email?.toLowerCase() && user.id !== userId
     );
 
@@ -70,10 +71,10 @@ const EditUser: React.FC = () => {
     }
 
     // Update existing user
-    const updatedUsers = users.map(user => 
+    const updatedUsers = storedUsers.map(user => 
       user.id === userId ? { ...user, ...formData } as User : user
     );
-    setUsers(updatedUsers);
+    setStoredUsers(updatedUsers);
     
     toast({
       title: "Success",

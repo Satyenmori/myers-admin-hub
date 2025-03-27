@@ -1,3 +1,4 @@
+
 export type Role = 'admin' | 'manager' | 'user';
 
 export interface User {
@@ -32,12 +33,7 @@ export interface ServiceRequest {
   dispensaryId: string;
   dispensaryName: string;
   priority: "low" | "medium" | "high";
-  responseNotes: {
-    id: string;
-    text: string;
-    createdAt: string;
-    createdBy: string;
-  }[];
+  responseNotes: ResponseNote[];
   resolvedAt?: string;
 }
 
