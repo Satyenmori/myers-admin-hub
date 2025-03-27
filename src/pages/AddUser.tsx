@@ -173,7 +173,7 @@ const AddUser: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 flex justify-center">
             <button
               type="submit"
               className="btn-primary inline-flex items-center gap-2"

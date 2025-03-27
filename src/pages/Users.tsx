@@ -91,7 +91,7 @@ const Users = () => {
       {/* Filters */}
       <div className="glass-card p-4 rounded-lg">
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
+          <div className="flex relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <input
               type="search"
@@ -140,7 +140,7 @@ const Users = () => {
               <tr className="border-b bg-muted/50">
                 <th className="px-4 py-3 text-left font-medium text-sm">Name</th>
                 <th className="px-4 py-3 text-left font-medium text-sm">Email</th>
-                <th className="px-4 py-3 text-left font-medium text-sm">Role</th>
+                {/* <th className="px-4 py-3 text-left font-medium text-sm">Role</th> */}
                 <th className="px-4 py-3 text-left font-medium text-sm">Status</th>
                 <th className="px-4 py-3 text-left font-medium text-sm">Created</th>
                 {(canEdit || canDelete) && (
@@ -161,7 +161,7 @@ const Users = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm">{user.email}</td>
-                    <td className="px-4 py-3">
+                    {/* <td className="px-4 py-3">
                       <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                         user.role === 'admin' 
                           ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' 
@@ -171,7 +171,7 @@ const Users = () => {
                       }`}>
                         {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                       </span>
-                    </td>
+                    </td> */}
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                         user.status === 'active' 
