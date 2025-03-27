@@ -28,7 +28,7 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto glass-card shadow-lg relative overflow-hidden">
+    <div className="w-full max-w-md mx-auto glass-card shadow-lg relative overflow-hidden rounded-md">
       {/* Curved divider */}
       <div className="absolute w-full h-full">
         <div className="h-1/2 bg-gray-900"></div>
@@ -57,7 +57,7 @@ const LoginForm: React.FC = () => {
         <div className="mt-8">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label htmlFor="email" className="form-label block text-gray-200">
+              <label htmlFor="email" className="form-label block text-gray-600">
                 Email
               </label>
               <div className="relative">
@@ -142,7 +142,7 @@ const LoginForm: React.FC = () => {
                   Signing In...
                 </span>
               ) : (
-                "Sign In"
+                "Login"
               )}
             </button>
           </form>

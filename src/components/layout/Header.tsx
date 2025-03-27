@@ -52,14 +52,14 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           <span className="sr-only">Toggle sidebar</span>
         </button>
         
-        <div className="hidden md:flex relative">
+        {/* <div className="hidden md:flex relative">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <input
             type="search"
             placeholder="Search..."
             className="w-64 rounded-full bg-muted/30 pl-10 pr-4 py-2 text-sm outline-none focus:bg-muted/50 transition-colors"
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="ml-auto flex items-center gap-4">
@@ -82,16 +82,17 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
         <DropdownMenu>
           <DropdownMenuTrigger className="outline-none">
-            <div className="flex items-center gap-2 rounded-full bg-accent/50 p-1 pr-3 hover:bg-accent cursor-pointer">
+            <div className="flex items-center gap-2 rounded-full p-1 pr-3 hover:bg-accent cursor-pointer"> 
+                {/* bg-accent/50 add in above div so add round in back avtar*/}
               <Avatar className="h-8 w-8 border-2 border-primary/20">
                 <AvatarFallback className="bg-primary text-primary-foreground font-medium">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
-              <span className="text-sm font-medium hidden sm:inline-block">
+              {/* <span className="text-sm font-medium hidden sm:inline-block">
                 {user?.name || "User"}
-              </span>
-              <ChevronDown className="h-4 w-4 opacity-70" />
+              </span> */}
+              {/* <ChevronDown className="h-4 w-4 opacity-70" /> */}
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-72 p-3">

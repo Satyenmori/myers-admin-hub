@@ -26,13 +26,13 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent/20 p-4">
-      <div className="w-full max-w-md mx-auto glass-card shadow-lg relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#E3E4E4] p-4">
+      <div className="w-full max-w-md mx-auto glass-card shadow-lg relative overflow-hidden rounded-md">
         {/* Curved divider */}
         <div className="absolute w-full h-full">
           <div className="h-1/2 bg-gray-900"></div>
           <div className="h-1/2 bg-white"></div>
-          <div className="absolute left-0 right-0 h-16 top-1/2 -mt-8 overflow-hidden">
+          <div className="absolute left-0 right-0 h-16 top-1/2 -mt-4 overflow-hidden">
             <div className="w-full h-16 bg-white rounded-t-full"></div>
           </div>
         </div>
@@ -40,14 +40,14 @@ const ForgotPassword: React.FC = () => {
         {/* Content */}
         <div className="relative p-6">
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center mb-6 relative">
+            <div className="flex items-center justify-center mb-8 relative">
               <img
                 src={logo}
                 alt="Myers Security Logo"
-                className="h-20 w-40 text-myers-blue animate-float"
+                className="h-20 w-40 text-myers-blue"
               />
             </div>
-            <h1 className="text-3xl font-poppins font-bold mb-2 text-white">Forgot Password</h1>
+            <h1 className="text-3xl font-poppins font-bold mb-1 text-white">Forgot Password</h1>
             <p className="text-gray-300">
               Enter your email to reset your password
             </p>

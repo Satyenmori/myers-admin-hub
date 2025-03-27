@@ -27,7 +27,7 @@ const Login: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-accent/20 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#E3E4E4] p-4">
       <LoginForm />
     </div>
   );
