@@ -16,8 +16,10 @@ import ServiceRequests from "./pages/ServiceRequests";
 import NotFound from "./pages/NotFound";
 import MainLayout from "./components/layout/MainLayout";
 import ForgotPassword from "./pages/ForgotPassword";
-import AddEditUser from "./pages/AddEditUser";
-import AddEditSupportEngineer from "./pages/AddEditSupportEngineer";
+import AddUser from "./pages/AddUser";
+import EditUser from "./pages/EditUser";
+import AddSupportEngineer from "./pages/AddSupportEngineer";
+import EditSupportEngineer from "./pages/EditSupportEngineer";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -47,11 +49,11 @@ const App: React.FC = () => {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/users" element={<Users />} />
-                  <Route path="/users/add" element={<AddEditUser />} />
-                  <Route path="/users/edit/:userId" element={<AddEditUser />} />
+                  <Route path="/users/add" element={<AddUser />} />
+                  <Route path="/users/edit/:userId" element={<EditUser />} />
                   <Route path="/manage-support-engineers" element={<ManageSupportEngineers />} />
-                  <Route path="/manage-support-engineers/add" element={<AddEditSupportEngineer />} />
-                  <Route path="/manage-support-engineers/edit/:engineerId" element={<AddEditSupportEngineer />} />
+                  <Route path="/manage-support-engineers/add" element={<AddSupportEngineer />} />
+                  <Route path="/manage-support-engineers/edit/:engineerId" element={<EditSupportEngineer />} />
                   <Route path="/dispensaries" element={<Dispensaries />} />
                   <Route path="/service-requests" element={<ServiceRequests />} />
                 </Route>
