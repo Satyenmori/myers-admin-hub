@@ -1,34 +1,32 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { LOCAL_STORAGE_KEYS } from "@/lib/constants";
-import { User } from "@/lib/types";
 import { toast } from "@/hooks/use-toast";
-import { ArrowLeft, Save, Wrench } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Save, Wrench } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 
 const AddSupportEngineer: React.FC = () => {
   const navigate = useNavigate();
-  const [users, setUsers] = useLocalStorage<User[]>(LOCAL_STORAGE_KEYS.USERS, []);
-  
-  const [formData, setFormData] = useState<Partial<User>>({
-    name: "",
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
-    role: "user",
+    password: "",
+    phoneNumber: "",
     status: "active",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validation
-    if (!formData.name || !formData.email) {
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.phoneNumber) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -37,10 +35,12 @@ const AddSupportEngineer: React.FC = () => {
       return;
     }
 
+    // Get existing support engineers from localStorage
+    const storedData = localStorage.getItem("support-engineer");
+    const existingUsers = storedData ? JSON.parse(storedData) : [];
+
     // Check for duplicate email
-    const duplicateEmail = users.find(
-      user => user.email.toLowerCase() === formData.email?.toLowerCase()
-    );
+    const duplicateEmail = existingUsers.find((user: any) => user.email.toLowerCase() === formData.email.toLowerCase());
 
     if (duplicateEmail) {
       toast({
@@ -51,18 +51,22 @@ const AddSupportEngineer: React.FC = () => {
       return;
     }
 
-    // Create new engineer with fixed role=user
-    const newEngineer: User = {
+    // Create new support engineer object
+    const newEngineer = {
       id: uuidv4(),
-      name: formData.name || "",
-      email: formData.email || "",
-      role: "user", // Always set role to "user" for support engineers
-      status: formData.status as "active" | "inactive" || "active",
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password, // ⚠️ Avoid storing plaintext passwords in production
+      phoneNumber: formData.phoneNumber,
+      status: formData.status as "active" | "inactive",
       createdAt: new Date().toISOString(),
     };
-    
-    setUsers([...users, newEngineer]);
-    
+
+    // Add to localStorage
+    const updatedUsers = [...existingUsers, newEngineer];
+    localStorage.setItem("support-engineer", JSON.stringify(updatedUsers));
+
     toast({
       title: "Success",
       description: "Support engineer added successfully",
@@ -75,7 +79,7 @@ const AddSupportEngineer: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <button 
+          <button
             onClick={() => navigate("/manage-support-engineers")}
             className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-muted"
           >
@@ -100,22 +104,41 @@ const AddSupportEngineer: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* First Name */}
             <div className="space-y-2">
-              <label htmlFor="name" className="form-label block">
-                Full Name <span className="text-red-500">*</span>
+              <label htmlFor="firstName" className="form-label block">
+                First Name <span className="text-red-500">*</span>
               </label>
               <input
-                id="name"
-                name="name"
+                id="firstName"
+                name="firstName"
                 type="text"
-                value={formData.name || ""}
+                value={formData.firstName}
                 onChange={handleChange}
                 className="form-input"
-                placeholder="John Technician"
+                placeholder="John"
                 required
               />
             </div>
 
+            {/* Last Name */}
+            <div className="space-y-2">
+              <label htmlFor="lastName" className="form-label block">
+                Last Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="lastName"
+                name="lastName"
+                type="text"
+                value={formData.lastName}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="Doe"
+                required
+              />
+            </div>
+
+            {/* Email */}
             <div className="space-y-2">
               <label htmlFor="email" className="form-label block">
                 Email Address <span className="text-red-500">*</span>
@@ -124,7 +147,7 @@ const AddSupportEngineer: React.FC = () => {
                 id="email"
                 name="email"
                 type="email"
-                value={formData.email || ""}
+                value={formData.email}
                 onChange={handleChange}
                 className="form-input"
                 placeholder="john@example.com"
@@ -132,6 +155,50 @@ const AddSupportEngineer: React.FC = () => {
               />
             </div>
 
+            {/* Password */}
+            <div className="space-y-2 relative">
+              <label htmlFor="password" className="form-label block">
+                Password <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="form-input pr-10"
+                  placeholder="Enter password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 flex items-center px-2 text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Phone Number */}
+            <div className="space-y-2">
+              <label htmlFor="phoneNumber" className="form-label block">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="phoneNumber"
+                name="phoneNumber"
+                type="tel"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="123-456-7890"
+                required
+              />
+            </div>
+
+            {/* Status */}
             <div className="space-y-2">
               <label htmlFor="status" className="form-label block">
                 Status
@@ -139,7 +206,7 @@ const AddSupportEngineer: React.FC = () => {
               <select
                 id="status"
                 name="status"
-                value={formData.status || "active"}
+                value={formData.status}
                 onChange={handleChange}
                 className="form-input"
               >
@@ -150,10 +217,7 @@ const AddSupportEngineer: React.FC = () => {
           </div>
 
           <div className="pt-4">
-            <button
-              type="submit"
-              className="btn-primary inline-flex items-center gap-2"
-            >
+            <button type="submit" className="btn-primary inline-flex items-center gap-2">
               <Save className="h-4 w-4" />
               Create Support Engineer
             </button>

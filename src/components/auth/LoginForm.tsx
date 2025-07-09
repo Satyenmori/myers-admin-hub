@@ -45,7 +45,7 @@ const LoginForm: React.FC = () => {
             <img
               src={logo}
               alt="Myers Security Logo"
-              className="h-20 w-40 text-myers-blue animate-float"
+              className="h-20 w-40 text-myers-blue"
             />
           </div>
           <h1 className="text-3xl font-poppins font-bold mb-2 text-white">Welcome Back</h1>
