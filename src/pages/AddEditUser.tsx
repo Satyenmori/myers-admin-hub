@@ -47,7 +47,7 @@ const AddEditUser: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validation
+    // Validation of name
     if (!formData.name || !formData.email) {
       toast({
         title: "Error",
